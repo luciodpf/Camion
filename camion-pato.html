@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0f0f1a">
+<title>Camión</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f0f1a;--surface:#1a1a2e;--surface2:#22223a;--border:#2e2e4a;--accent:#e8c547;--accent2:#4fc3f7;--text:#e8e8f0;--muted:#7070a0;--danger:#ff6b6b;--success:#69db7c;--r:10px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;min-height:100vh;padding-bottom:90px}
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.header-title{font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:600;color:var(--accent)}
+.header-sub{font-size:11px;color:var(--muted);margin-top:2px;font-family:'IBM Plex Mono',monospace}
+.km-badge{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:6px 12px;text-align:right}
+.km-label{font-size:10px;color:var(--muted);font-family:'IBM Plex Mono',monospace}
+.km-value{font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600;color:var(--accent2)}
+.month-nav{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:var(--surface);border-bottom:1px solid var(--border)}
+.month-btn{background:var(--surface2);border:1px solid var(--border);color:var(--text);width:36px;height:36px;border-radius:8px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.month-label{font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:600;text-transform:uppercase;letter-spacing:.08em}
+.summary-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:12px 16px}
+.summary-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;text-align:center}
+.s-val{font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:600;color:var(--accent)}
+.s-label{font-size:10px;color:var(--muted);margin-top:2px}
+.records{padding:0 16px;display:flex;flex-direction:column;gap:8px}
+.day-label{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding:12px 4px 4px}
+.record-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;display:flex;align-items:flex-start;gap:12px}
+.rec-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.tv .rec-icon{background:rgba(232,197,71,.12)}
+.tc .rec-icon{background:rgba(79,195,247,.12)}
+.tr .rec-icon{background:rgba(255,107,107,.12)}
+.tm .rec-icon{background:rgba(105,219,124,.12)}
+.rec-info{flex:1;min-width:0}
+.rec-title{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rec-detail{font-size:12px;color:var(--muted);margin-top:3px}
+.rec-meta{text-align:right;flex-shrink:0}
+.rec-km{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--accent2)}
+.badge{display:inline-block;font-size:10px;font-family:'IBM Plex Mono',monospace;text-transform:uppercase;padding:2px 6px;border-radius:4px;margin-top:4px}
+.bv{background:rgba(232,197,71,.15);color:var(--accent)}
+.bc{background:rgba(79,195,247,.15);color:var(--accent2)}
+.br{background:rgba(255,107,107,.15);color:var(--danger)}
+.bm{background:rgba(105,219,124,.15);color:var(--success)}
+.fab{position:fixed;bottom:24px;right:20px;background:var(--accent);color:#0f0f1a;border:none;border-radius:50px;padding:14px 24px;font-family:'IBM Plex Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;box-shadow:0 4px 20px rgba(232,197,71,.35);z-index:200}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:300;opacity:0;pointer-events:none;transition:opacity .2s}
+.overlay.open{opacity:1;pointer-events:all}
+.drawer{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-radius:20px 20px 0 0;z-index:400;transform:translateY(100%);transition:transform .3s cubic-bezier(.32,.72,0,1);max-height:92vh;overflow-y:auto;padding-bottom:32px}
+.drawer.open{transform:translateY(0)}
+.drawer-handle{width:40px;height:4px;background:var(--border);border-radius:2px;margin:12px auto 0}
+.drawer-header{padding:16px 20px 0;display:flex;align-items:center;justify-content:space-between}
+.drawer-title{font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:600;color:var(--accent)}
+.close-btn{background:var(--surface2);border:1px solid var(--border);color:var(--muted);width:32px;height:32px;border-radius:8px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.form-body{padding:20px;display:flex;flex-direction:column;gap:16px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-group{display:flex;flex-direction:column;gap:6px}
+label{font-size:11px;font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+input,select{background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'IBM Plex Sans',sans-serif;font-size:15px;padding:10px 12px;width:100%;appearance:none;-webkit-appearance:none;outline:none;transition:border-color .15s}
+input:focus,select:focus{border-color:var(--accent)}
+.type-selector{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.type-btn{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 4px;text-align:center;cursor:pointer;transition:all .15s}
+.type-btn .t-icon{font-size:20px;display:block}
+.type-btn .t-label{font-size:10px;color:var(--muted);font-family:'IBM Plex Mono',monospace;display:block;margin-top:4px}
+.type-btn.active{border-color:var(--accent);background:rgba(232,197,71,.1)}
+.type-btn.active .t-label{color:var(--accent)}
+.submit-btn{background:var(--accent);color:#0f0f1a;border:none;border-radius:10px;padding:14px;font-family:'IBM Plex Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;width:100%}
+.submit-btn:disabled{opacity:.5}
+.fields-section{display:flex;flex-direction:column;gap:12px}
+.empty-state{text-align:center;padding:48px 20px;color:var(--muted)}
+.e-icon{font-size:48px;display:block;margin-bottom:12px}
+.loading{text-align:center;padding:40px;color:var(--muted);font-family:'IBM Plex Mono',monospace;font-size:13px}
+.spinner{width:24px;height:24px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px 20px;font-size:13px;font-family:'IBM Plex Mono',monospace;z-index:500;opacity:0;transition:all .3s;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.success{border-color:var(--success);color:var(--success)}
+.toast.error{border-color:var(--danger);color:var(--danger)}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="header-title">🚛 CAMIÓN</div>
+    <div class="header-sub">Registro de novedades</div>
+  </div>
+  <div class="km-badge">
+    <div class="km-label">Último KM</div>
+    <div class="km-value" id="lastKmDisplay">—</div>
+  </div>
+</div>
+
+<div class="month-nav">
+  <button class="month-btn" onclick="changeMonth(-1)">‹</button>
+  <div class="month-label" id="monthLabel">—</div>
+  <button class="month-btn" onclick="changeMonth(1)">›</button>
+</div>
+
+<div class="summary-strip">
+  <div class="summary-card"><div class="s-val" id="sumViajes">—</div><div class="s-label">Viajes</div></div>
+  <div class="summary-card"><div class="s-val" id="sumKilos">—</div><div class="s-label">Tn totales</div></div>
+  <div class="summary-card"><div class="s-val" id="sumLitros">—</div><div class="s-label">Litros</div></div>
+</div>
+
+<div class="records" id="recordsContainer">
+  <div class="loading"><div class="spinner"></div>Cargando...</div>
+</div>
+
+<button class="fab" onclick="openDrawer()"><span>+</span> Nueva novedad</button>
+
+<div class="overlay" id="overlay" onclick="closeDrawer()"></div>
+
+<div class="drawer" id="drawer">
+  <div class="drawer-handle"></div>
+  <div class="drawer-header">
+    <div class="drawer-title">Nueva novedad</div>
+    <button class="close-btn" onclick="closeDrawer()">×</button>
+  </div>
+  <div class="form-body">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Fecha</label>
+        <input type="date" id="fFecha">
+      </div>
+      <div class="form-group">
+        <label>KM Camión</label>
+        <input type="number" id="fKm" placeholder="0">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Tipo de novedad</label>
+      <div class="type-selector">
+        <div class="type-btn active" onclick="selectType('Viaje',this)"><span class="t-icon">🌾</span><span class="t-label">Viaje</span></div>
+        <div class="type-btn" onclick="selectType('Combustible',this)"><span class="t-icon">⛽</span><span class="t-label">Combustible</span></div>
+        <div class="type-btn" onclick="selectType('Reparacion',this)"><span class="t-icon">🔧</span><span class="t-label">Reparación</span></div>
+        <div class="type-btn" onclick="selectType('Mantenimiento',this)"><span class="t-icon">🔩</span><span class="t-label">Mantenim.</span></div>
+      </div>
+    </div>
+
+    <div id="fields-Viaje" class="fields-section">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Origen</label>
+          <input type="text" id="fOrigen" list="dlOrigen" placeholder="Ej: AFA">
+          <datalist id="dlOrigen"></datalist>
+        </div>
+        <div class="form-group">
+          <label>Destino</label>
+          <input type="text" id="fDestino" list="dlDestino" placeholder="Ej: Renova">
+          <datalist id="dlDestino"></datalist>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>KMs Recorridos</label>
+          <input type="number" id="fKmsRec" placeholder="0">
+        </div>
+        <div class="form-group">
+          <label>Especie</label>
+          <input type="text" id="fEspecie" list="dlEspecies" placeholder="Ej: Soja">
+          <datalist id="dlEspecies">
+            <option value="Soja"><option value="Maíz"><option value="Girasol"><option value="Trigo"><option value="Sorgo">
+          </datalist>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Kilos</label>
+          <input type="number" id="fKilos" placeholder="0">
+        </div>
+        <div class="form-group">
+          <label>Carta de Porte</label>
+          <input type="text" id="fCartaPorte" placeholder="Nro.">
+        </div>
+      </div>
+    </div>
+
+    <div id="fields-Combustible" class="fields-section" style="display:none">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Litros</label>
+          <input type="number" id="fLitros" placeholder="0">
+        </div>
+        <div class="form-group">
+          <label>Proveedor</label>
+          <input type="text" id="fProvComb" list="dlProveedores" placeholder="Ej: AFA">
+          <datalist id="dlProveedores"></datalist>
+        </div>
+      </div>
+    </div>
+
+    <div id="fields-Reparacion" class="fields-section" style="display:none">
+      <div class="form-group">
+        <label>Actividad</label>
+        <input type="text" id="fActRep" placeholder="Describí la reparación">
+      </div>
+      <div class="form-group">
+        <label>Proveedor / Taller</label>
+        <input type="text" id="fProvRep" placeholder="Nombre">
+      </div>
+    </div>
+
+    <div id="fields-Mantenimiento" class="fields-section" style="display:none">
+      <div class="form-group">
+        <label>Actividad</label>
+        <input type="text" id="fActMant" placeholder="Describí el mantenimiento">
+      </div>
+    </div>
+
+    <button class="submit-btn" id="submitBtn" onclick="submitForm()">Guardar novedad</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SHEET_ID = '1wkAAUVgFGOH8q0xni1nfyuFB_fXN5kfV6XkbORZ1YUQ';
+const SHEET_NAME = 'Novedades';
+const APPS_SCRIPT_URL = 'TU_APPS_SCRIPT_URL_AQUI';
+const MONTHS = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+let currentMonth = new Date().getMonth(), currentYear = new Date().getFullYear();
+let allRecords = [], selectedType = 'Viaje', lastKm = null;
+
+document.addEventListener('DOMContentLoaded', () => { setDefaults(); updateMonthLabel(); loadData(); });
+
+function setDefaults() {
+  const t = new Date();
+  document.getElementById('fFecha').value = `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`;
+}
+
+async function loadData() {
+  document.getElementById('recordsContainer').innerHTML = '<div class="loading"><div class="spinner"></div>Cargando...</div>';
+  try {
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(SHEET_NAME)}`;
+    const r = await fetch(url);
+    const csv = await r.text();
+    allRecords = parseCSV(csv);
+    updateLastKm(); buildLists(); renderRecords();
+  } catch(e) {
+    document.getElementById('recordsContainer').innerHTML = '<div class="empty-state"><span class="e-icon">⚠️</span><span>Error cargando datos</span></div>';
+  }
+}
+
+function parseCSV(csv) {
+  const lines = csv.trim().split('\n');
+  if (lines.length < 2) return [];
+  return lines.slice(1).map(l => {
+    const c = parseCSVLine(l);
+    const fecha = c[0]?.replace(/"/g,'').trim();
+    if (!fecha) return null;
+    return { fecha, km_camion:c[1]?.replace(/"/g,'').trim()||'', tipo:c[2]?.replace(/"/g,'').trim()||'',
+      origen:c[3]?.replace(/"/g,'').trim()||'', destino:c[4]?.replace(/"/g,'').trim()||'',
+      kms_rec:c[5]?.replace(/"/g,'').trim()||'', especie:c[6]?.replace(/"/g,'').trim()||'',
+      kilos:c[7]?.replace(/"/g,'').trim()||'', litros:c[8]?.replace(/"/g,'').trim()||'',
+      actividad:c[9]?.replace(/"/g,'').trim()||'', proveedor:c[10]?.replace(/"/g,'').trim()||'' };
+  }).filter(Boolean);
+}
+
+function parseCSVLine(line) {
+  const r=[]; let cur='', inQ=false;
+  for (let i=0;i<line.length;i++) {
+    const ch=line[i];
+    if(ch==='"'){inQ=!inQ;} else if(ch===','&&!inQ){r.push(cur);cur='';} else{cur+=ch;}
+  }
+  r.push(cur); return r;
+}
+
+function parseDate(s) {
+  if(!s) return null;
+  const p=s.split('/');
+  if(p.length===3) return new Date(+p[2],+p[1]-1,+p[0]);
+  const d=new Date(s); return isNaN(d)?null:d;
+}
+
+function updateLastKm() {
+  const w=allRecords.filter(r=>r.km_camion&&!isNaN(+r.km_camion));
+  if(!w.length) return;
+  w.sort((a,b)=>(parseDate(b.fecha)||0)-(parseDate(a.fecha)||0));
+  lastKm=+w[0].km_camion;
+  document.getElementById('lastKmDisplay').textContent=lastKm.toLocaleString('es-AR');
+}
+
+function buildLists() {
+  const fill=(id,vals)=>{const dl=document.getElementById(id);if(dl)dl.innerHTML=[...new Set(vals.filter(Boolean))].map(v=>`<option value="${v}">`).join('');};
+  fill('dlOrigen',allRecords.map(r=>r.origen));
+  fill('dlDestino',allRecords.map(r=>r.destino));
+  fill('dlProveedores',allRecords.map(r=>r.proveedor));
+}
+
+function updateMonthLabel() { document.getElementById('monthLabel').textContent=`${MONTHS[currentMonth]} ${currentYear}`; }
+
+function getMonthRecords() {
+  return allRecords.filter(r=>{const d=parseDate(r.fecha);return d&&d.getMonth()===currentMonth&&d.getFullYear()===currentYear;})
+    .sort((a,b)=>(parseDate(b.fecha)||0)-(parseDate(a.fecha)||0));
+}
+
+function renderRecords() {
+  const records=getMonthRecords();
+  const viajes=records.filter(r=>r.tipo==='Viaje');
+  const kilosTot=viajes.reduce((s,r)=>s+(+r.kilos||0),0);
+  const litrosTot=records.filter(r=>r.tipo==='Combustible').reduce((s,r)=>s+(+r.litros||0),0);
+  document.getElementById('sumViajes').textContent=viajes.length||'—';
+  document.getElementById('sumKilos').textContent=kilosTot>0?(kilosTot>=1000?(kilosTot/1000).toFixed(1)+'t':kilosTot):'—';
+  document.getElementById('sumLitros').textContent=litrosTot||'—';
+  const cont=document.getElementById('recordsContainer');
+  if(!records.length){cont.innerHTML=`<div class="empty-state"><span class="e-icon">📋</span><span>Sin novedades en ${MONTHS[currentMonth]}</span></div>`;return;}
+  const byDay={};
+  for(const r of records){if(!byDay[r.fecha])byDay[r.fecha]={date:parseDate(r.fecha),items:[]};byDay[r.fecha].items.push(r);}
+  const days=Object.keys(byDay).sort((a,b)=>(byDay[b].date||0)-(byDay[a].date||0));
+  cont.innerHTML=days.map(k=>{
+    const {date,items}=byDay[k];
+    const label=date?date.toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long'}):k;
+    return `<div class="day-label">${label}</div>`+items.map(renderCard).join('');
+  }).join('');
+}
+
+function renderCard(r) {
+  const map={Viaje:{icon:'🌾',cls:'tv',bc:'bv'},Combustible:{icon:'⛽',cls:'tc',bc:'bc'},Reparacion:{icon:'🔧',cls:'tr',bc:'br'},Mantenimiento:{icon:'🔩',cls:'tm',bc:'bm'}};
+  const td=map[r.tipo]||{icon:'📋',cls:'',bc:''};
+  let title=r.tipo,detail='';
+  if(r.tipo==='Viaje'){title=`${r.origen} → ${r.destino}`;detail=[r.especie,+r.kilos?`${(+r.kilos/1000).toFixed(1)} tn`:'',r.kms_rec?`${r.kms_rec} km`:''].filter(Boolean).join(' · ');}
+  else if(r.tipo==='Combustible'){title='Carga combustible';detail=[r.litros?`${r.litros} L`:'',r.proveedor].filter(Boolean).join(' · ');}
+  else if(r.tipo==='Reparacion'){title=r.actividad||'Reparación';detail=r.proveedor||'';}
+  else if(r.tipo==='Mantenimiento'){title=r.actividad||'Mantenimiento';}
+  return `<div class="record-card ${td.cls}"><div class="rec-icon">${td.icon}</div><div class="rec-info"><div class="rec-title">${title}</div>${detail?`<div class="rec-detail">${detail}</div>`:''}<span class="badge ${td.bc}">${r.tipo}</span></div><div class="rec-meta">${r.km_camion?`<div class="rec-km">${(+r.km_camion).toLocaleString('es-AR')} km</div>`:''}</div></div>`;
+}
+
+function changeMonth(d){currentMonth+=d;if(currentMonth>11){currentMonth=0;currentYear++;}if(currentMonth<0){currentMonth=11;currentYear--;}updateMonthLabel();renderRecords();}
+
+function openDrawer(){document.getElementById('overlay').classList.add('open');document.getElementById('drawer').classList.add('open');setDefaults();if(lastKm)document.getElementById('fKm').value=lastKm;}
+function closeDrawer(){document.getElementById('overlay').classList.remove('open');document.getElementById('drawer').classList.remove('open');}
+
+function selectType(type,el){
+  selectedType=type;
+  document.querySelectorAll('.type-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');
+  ['Viaje','Combustible','Reparacion','Mantenimiento'].forEach(t=>{const f=document.getElementById(`fields-${t}`);if(f)f.style.display=t===type?'flex':'none';});
+}
+
+async function submitForm(){
+  const btn=document.getElementById('submitBtn');btn.disabled=true;btn.textContent='Guardando...';
+  try{
+    const fecha=document.getElementById('fFecha').value,km=document.getElementById('fKm').value;
+    if(!fecha||!km){showToast('Completá fecha y KM','error');btn.disabled=false;btn.textContent='Guardar novedad';return;}
+    const [y,m,d]=fecha.split('-');
+    const row={Fecha:`${d}/${m}/${y}`,KM_Camion:km,Tipo:selectedType,Origen:'',Destino:'',KMs_Recorridos:'',Especie:'',Kilos:'',Litros:'',Actividad:'',Proveedor:''};
+    if(selectedType==='Viaje'){
+      row.Origen=document.getElementById('fOrigen').value;row.Destino=document.getElementById('fDestino').value;
+      row.KMs_Recorridos=document.getElementById('fKmsRec').value;row.Especie=document.getElementById('fEspecie').value;
+      row.Kilos=document.getElementById('fKilos').value;
+      if(!row.Origen||!row.Destino){showToast('Completá origen y destino','error');btn.disabled=false;btn.textContent='Guardar novedad';return;}
+    } else if(selectedType==='Combustible'){row.Litros=document.getElementById('fLitros').value;row.Proveedor=document.getElementById('fProvComb').value;}
+    else if(selectedType==='Reparacion'){row.Actividad=document.getElementById('fActRep').value;row.Proveedor=document.getElementById('fProvRep').value;}
+    else if(selectedType==='Mantenimiento'){row.Actividad=document.getElementById('fActMant').value;}
+    const resp=await fetch(APPS_SCRIPT_URL,{method:'POST',body:JSON.stringify(row)});
+    const result=await resp.json();
+    if(result.status==='ok'){showToast('✓ Guardado correctamente','success');closeDrawer();await loadData();}
+    else{showToast('Error al guardar','error');}
+  }catch(e){showToast('Error de conexión','error');}
+  btn.disabled=false;btn.textContent='Guardar novedad';
+}
+
+function showToast(msg,type=''){const t=document.getElementById('toast');t.textContent=msg;t.className=`toast ${type} show`;setTimeout(()=>{t.className='toast';},3000);}
+</script>
+</body>
+</html>
