@@ -22,33 +22,27 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 .month-nav{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:var(--surface);border-bottom:1px solid var(--border)}
 .month-btn{background:var(--surface2);border:1px solid var(--border);color:var(--text);width:36px;height:36px;border-radius:8px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .month-label{font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:600;text-transform:uppercase;letter-spacing:.08em}
-
-/* SUMMARY */
-.summary-strip{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:12px 16px}
-.summary-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:12px;text-align:center}
+.summary-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:12px 16px 0}
+.summary-strip-2{grid-template-columns:repeat(2,1fr)}
+.summary-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;text-align:center}
 .summary-card.highlight{border-color:rgba(244,164,74,.4);background:rgba(244,164,74,.06)}
-.s-val{font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:600;color:var(--accent)}
+.s-val{font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:600;color:var(--accent)}
 .s-val.cost{color:var(--gold)}
 .s-label{font-size:10px;color:var(--muted);margin-top:2px}
-.summary-strip-3{grid-template-columns:repeat(3,1fr)}
-
-/* TARIFAS PANEL */
-.tarifas-toggle{margin:0 16px 8px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;display:flex;align-items:center;justify-content:space-between;cursor:pointer}
+.tarifas-toggle{margin:12px 16px 0;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;display:flex;align-items:center;justify-content:space-between;cursor:pointer}
 .tarifas-toggle-label{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
 .tarifas-toggle-icon{color:var(--muted);font-size:14px;transition:transform .2s}
 .tarifas-toggle-icon.open{transform:rotate(180deg)}
-.tarifas-panel{margin:0 16px 12px;background:var(--surface);border:1px solid rgba(244,164,74,.3);border-radius:var(--r);overflow:hidden;display:none}
+.tarifas-panel{margin:4px 16px 0;background:var(--surface);border:1px solid rgba(244,164,74,.3);border-radius:var(--r);overflow:hidden;display:none}
 .tarifas-panel.open{display:block}
 .tarifas-header{padding:10px 14px;background:rgba(244,164,74,.08);border-bottom:1px solid rgba(244,164,74,.2);font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--gold);text-transform:uppercase;letter-spacing:.08em}
 .tarifa-row{display:flex;align-items:center;padding:8px 14px;border-bottom:1px solid var(--border);gap:10px}
 .tarifa-row:last-child{border-bottom:none}
-.tarifa-ruta{flex:1;font-size:13px;color:var(--text)}
-.tarifa-input{background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--gold);font-family:'IBM Plex Mono',monospace;font-size:13px;padding:6px 10px;width:110px;text-align:right;outline:none}
+.tarifa-km{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--accent2);width:60px}
+.tarifa-input{background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--gold);font-family:'IBM Plex Mono',monospace;font-size:13px;padding:6px 10px;flex:1;text-align:right;outline:none}
 .tarifa-input:focus{border-color:var(--gold)}
 .tarifa-unit{font-size:11px;color:var(--muted);font-family:'IBM Plex Mono',monospace;white-space:nowrap}
-
-/* RECORDS */
-.records{padding:0 16px;display:flex;flex-direction:column;gap:8px}
+.records{padding:0 16px;display:flex;flex-direction:column;gap:8px;margin-top:12px}
 .day-label{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding:12px 4px 4px}
 .record-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;display:flex;align-items:flex-start;gap:12px}
 .rec-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
@@ -59,10 +53,12 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 .rec-info{flex:1;min-width:0}
 .rec-title{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .rec-detail{font-size:12px;color:var(--muted);margin-top:3px}
+.rec-obs{font-size:11px;color:var(--muted);margin-top:3px;font-style:italic}
+.rec-carta{font-size:11px;color:var(--accent2);margin-top:2px;font-family:'IBM Plex Mono',monospace}
 .rec-meta{text-align:right;flex-shrink:0}
 .rec-km{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--accent2)}
 .rec-cost{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;color:var(--gold);margin-top:4px}
-.rec-cost-none{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--border);margin-top:4px}
+.rec-cost-none{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--border);margin-top:4px}
 .badge{display:inline-block;font-size:10px;font-family:'IBM Plex Mono',monospace;text-transform:uppercase;padding:2px 6px;border-radius:4px;margin-top:4px}
 .bv{background:rgba(232,197,71,.15);color:var(--accent)}
 .bc{background:rgba(79,195,247,.15);color:var(--accent2)}
@@ -101,25 +97,30 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
   <button class="month-btn" onclick="changeMonth(1)">›</button>
 </div>
 
-<div class="summary-strip summary-strip-3" id="summaryStrip">
+<!-- SUMMARY -->
+<div class="summary-strip">
   <div class="summary-card"><div class="s-val" id="sumViajes">—</div><div class="s-label">Viajes</div></div>
-  <div class="summary-card"><div class="s-val" id="sumKilos">—</div><div class="s-label">Tn totales</div></div>
+  <div class="summary-card"><div class="s-val" id="sumKms">—</div><div class="s-label">KMs recorridos</div></div>
   <div class="summary-card"><div class="s-val" id="sumLitros">—</div><div class="s-label">Litros</div></div>
 </div>
-<div class="summary-strip" style="padding-top:0">
-  <div class="summary-card highlight" style="grid-column:1/-1">
+<div class="summary-strip summary-strip-2" style="padding-bottom:0">
+  <div class="summary-card highlight">
     <div class="s-val cost" id="sumCosto">—</div>
-    <div class="s-label">Costo estimado del mes</div>
+    <div class="s-label">Adicional estimado</div>
+  </div>
+  <div class="summary-card highlight">
+    <div class="s-val" id="sumKilos" style="color:var(--accent)">—</div>
+    <div class="s-label">Tn transportadas</div>
   </div>
 </div>
 
 <!-- TARIFAS -->
 <div class="tarifas-toggle" onclick="toggleTarifas()">
-  <span class="tarifas-toggle-label">⚙ Tarifas por ruta</span>
+  <span class="tarifas-toggle-label">⚙ Tarifas por KM</span>
   <span class="tarifas-toggle-icon" id="tarifasIcon">▼</span>
 </div>
 <div class="tarifas-panel" id="tarifasPanel">
-  <div class="tarifas-header">Tarifa ($/tn) · Costo = tarifa × kilos × 0.18 / 1000</div>
+  <div class="tarifas-header">Adicional = tarifa × kilos × 0.18 / 1000</div>
   <div id="tarifasList"></div>
 </div>
 
@@ -133,7 +134,7 @@ const SHEET_NAME = 'Novedades';
 const MONTHS = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 let currentMonth = new Date().getMonth(), currentYear = new Date().getFullYear();
 let allRecords = [], lastKm = null;
-// tarifas: { "AFA|Renova": 24.762, ... } — solo en memoria, no se guarda
+// tarifas por KM: { "134": 24.762, "28": 9.437, ... } — solo en memoria
 let tarifas = {};
 
 document.addEventListener('DOMContentLoaded', () => { updateMonthLabel(); loadData(); });
@@ -141,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => { updateMonthLabel(); loadDa
 async function loadData() {
   document.getElementById('recordsContainer').innerHTML = '<div class="loading"><div class="spinner"></div>Cargando...</div>';
   try {
-    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(SHEET_NAME)}`;
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(SHEET_NAME)}&t=${Date.now()}`;
     const r = await fetch(url);
     const csv = await r.text();
     allRecords = parseCSV(csv);
@@ -154,15 +155,20 @@ async function loadData() {
 function parseCSV(csv) {
   const lines = csv.trim().split('\n');
   if (lines.length < 2) return [];
-  return lines.slice(1).map(l => {
+  return lines.slice(1).map((l,i) => {
     const c = parseCSVLine(l);
     const fecha = c[0]?.replace(/"/g,'').trim();
     if (!fecha) return null;
-    return { fecha, km_camion:c[1]?.replace(/"/g,'').trim()||'', tipo:c[2]?.replace(/"/g,'').trim()||'',
+    return { rowIndex:i+2, fecha,
+      km_camion:c[1]?.replace(/"/g,'').trim()||'', tipo:c[2]?.replace(/"/g,'').trim()||'',
       origen:c[3]?.replace(/"/g,'').trim()||'', destino:c[4]?.replace(/"/g,'').trim()||'',
       kms_rec:c[5]?.replace(/"/g,'').trim()||'', especie:c[6]?.replace(/"/g,'').trim()||'',
       kilos:c[7]?.replace(/"/g,'').trim()||'', litros:c[8]?.replace(/"/g,'').trim()||'',
-      actividad:c[9]?.replace(/"/g,'').trim()||'', proveedor:c[10]?.replace(/"/g,'').trim()||'' };
+      actividad:c[9]?.replace(/"/g,'').trim()||'', proveedor:c[10]?.replace(/"/g,'').trim()||'',
+      adicional:c[11]?.replace(/"/g,'').trim()||'',
+      observaciones:c[12]?.replace(/"/g,'').trim()||'',
+      carta_porte:c[13]?.replace(/"/g,'').trim()||''
+    };
   }).filter(Boolean);
 }
 
@@ -190,97 +196,96 @@ function updateLastKm() {
   document.getElementById('lastKmDisplay').textContent=lastKm.toLocaleString('es-AR');
 }
 
-function rutaKey(o, d) { return `${o}|${d}`; }
-
-function buildTarifasList() {
-  // Collect unique routes from ALL records
-  const rutas = new Map();
-  for (const r of allRecords) {
-    if (r.tipo === 'Viaje' && r.origen && r.destino) {
-      const k = rutaKey(r.origen, r.destino);
-      if (!rutas.has(k)) rutas.set(k, { origen: r.origen, destino: r.destino });
-    }
-  }
-  const lista = document.getElementById('tarifasList');
-  if (rutas.size === 0) { lista.innerHTML = '<div style="padding:12px 14px;font-size:13px;color:var(--muted)">Sin rutas registradas aún</div>'; return; }
-  lista.innerHTML = [...rutas.entries()].map(([k, {origen, destino}]) => `
-    <div class="tarifa-row">
-      <div class="tarifa-ruta">${origen} → ${destino}</div>
-      <input class="tarifa-input" type="number" placeholder="0.00"
-        value="${tarifas[k]||''}"
-        onchange="setTarifa('${k}', this.value)"
-        oninput="setTarifa('${k}', this.value)">
-      <span class="tarifa-unit">$/tn</span>
-    </div>`).join('');
-}
-
-function setTarifa(key, val) {
-  const v = parseFloat(val);
-  if (!isNaN(v) && v > 0) { tarifas[key] = v; } else { delete tarifas[key]; }
-  renderRecords();
-}
-
-function calcCosto(r) {
-  if (r.tipo !== 'Viaje' || !r.kilos || !r.origen || !r.destino) return null;
-  const tarifa = tarifas[rutaKey(r.origen, r.destino)];
-  if (!tarifa) return null;
-  return tarifa * +r.kilos * 0.18 / 1000;
-}
-
-function toggleTarifas() {
-  const panel = document.getElementById('tarifasPanel');
-  const icon = document.getElementById('tarifasIcon');
-  panel.classList.toggle('open');
-  icon.classList.toggle('open');
-}
-
-function updateMonthLabel() { document.getElementById('monthLabel').textContent=`${MONTHS[currentMonth]} ${currentYear}`; }
-
 function getMonthRecords() {
   return allRecords.filter(r=>{const d=parseDate(r.fecha);return d&&d.getMonth()===currentMonth&&d.getFullYear()===currentYear;})
     .sort((a,b)=>(parseDate(b.fecha)||0)-(parseDate(a.fecha)||0));
 }
 
+function buildTarifasList() {
+  // Collect unique KMs from month records
+  const records = getMonthRecords();
+  const kms = [...new Set(records.filter(r=>r.tipo==='Viaje'&&r.kms_rec&&!isNaN(+r.kms_rec)).map(r=>+r.kms_rec))].sort((a,b)=>a-b);
+  const lista = document.getElementById('tarifasList');
+  if (!kms.length) { lista.innerHTML='<div style="padding:12px 14px;font-size:13px;color:var(--muted)">Sin viajes con KMs en este mes</div>'; return; }
+  lista.innerHTML = kms.map(km => `
+    <div class="tarifa-row">
+      <div class="tarifa-km">${km} km</div>
+      <input class="tarifa-input" type="number" placeholder="0.00"
+        value="${tarifas[km]||''}"
+        oninput="setTarifa(${km}, this.value)">
+      <span class="tarifa-unit">$/tn</span>
+    </div>`).join('');
+}
+
+function setTarifa(km, val) {
+  const v = parseFloat(val);
+  if (!isNaN(v) && v > 0) { tarifas[km] = v; } else { delete tarifas[km]; }
+  renderRecords();
+}
+
+function calcAdicional(r) {
+  if (r.tipo !== 'Viaje' || !r.kilos || !r.kms_rec) return null;
+  const tarifa = tarifas[+r.kms_rec];
+  if (!tarifa) return null;
+  return tarifa * +r.kilos * 0.18 / 1000;
+}
+
+function toggleTarifas() {
+  document.getElementById('tarifasPanel').classList.toggle('open');
+  document.getElementById('tarifasIcon').classList.toggle('open');
+}
+
+function updateMonthLabel() { document.getElementById('monthLabel').textContent=`${MONTHS[currentMonth]} ${currentYear}`; }
+
 function renderRecords() {
   const records = getMonthRecords();
   const viajes = records.filter(r=>r.tipo==='Viaje');
+  const kmsTot = viajes.reduce((s,r)=>s+(+r.kms_rec||0),0);
   const kilosTot = viajes.reduce((s,r)=>s+(+r.kilos||0),0);
   const litrosTot = records.filter(r=>r.tipo==='Combustible').reduce((s,r)=>s+(+r.litros||0),0);
-  let costoTot = 0; let hasCosto = false;
-  for (const r of viajes) { const c=calcCosto(r); if(c!=null){costoTot+=c;hasCosto=true;} }
+  let adicionalTot = 0; let hasAdicional = false;
+  for (const r of viajes) { const a=calcAdicional(r); if(a!=null){adicionalTot+=a;hasAdicional=true;} }
 
   document.getElementById('sumViajes').textContent = viajes.length||'—';
-  document.getElementById('sumKilos').textContent = kilosTot>0?(kilosTot>=1000?(kilosTot/1000).toFixed(1)+'t':kilosTot):'—';
+  document.getElementById('sumKms').textContent = kmsTot>0?kmsTot.toLocaleString('es-AR'):'—';
   document.getElementById('sumLitros').textContent = litrosTot||'—';
-  document.getElementById('sumCosto').textContent = hasCosto ? '$'+costoTot.toLocaleString('es-AR',{minimumFractionDigits:0,maximumFractionDigits:0}) : '— (cargá tarifas)';
+  document.getElementById('sumKilos').textContent = kilosTot>0?(kilosTot/1000).toFixed(1)+'t':'—';
+  document.getElementById('sumCosto').textContent = hasAdicional
+    ? '$'+adicionalTot.toLocaleString('es-AR',{minimumFractionDigits:0,maximumFractionDigits:0})
+    : '— (cargá tarifas)';
 
   const cont = document.getElementById('recordsContainer');
   if (!records.length) { cont.innerHTML=`<div class="empty-state"><span class="e-icon">📋</span><span>Sin novedades en ${MONTHS[currentMonth]}</span></div>`; return; }
 
-  const byDay = {};
+  const byDay={};
   for (const r of records) { if(!byDay[r.fecha])byDay[r.fecha]={date:parseDate(r.fecha),items:[]}; byDay[r.fecha].items.push(r); }
-  const days = Object.keys(byDay).sort((a,b)=>(byDay[b].date||0)-(byDay[a].date||0));
-  cont.innerHTML = days.map(k => {
-    const {date,items} = byDay[k];
-    const label = date?date.toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long'}):k;
-    return `<div class="day-label">${label}</div>` + items.map(renderCard).join('');
+  const days=Object.keys(byDay).sort((a,b)=>(byDay[b].date||0)-(byDay[a].date||0));
+  cont.innerHTML=days.map(k=>{
+    const {date,items}=byDay[k];
+    const label=date?date.toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long'}):k;
+    return `<div class="day-label">${label}</div>`+items.map(renderCard).join('');
   }).join('');
 }
 
 function renderCard(r) {
   const map={Viaje:{icon:'🌾',cls:'tv',bc:'bv'},Combustible:{icon:'⛽',cls:'tc',bc:'bc'},Reparacion:{icon:'🔧',cls:'tr',bc:'br'},Mantenimiento:{icon:'🔩',cls:'tm',bc:'bm'}};
-  const td = map[r.tipo]||{icon:'📋',cls:'',bc:''};
+  const td=map[r.tipo]||{icon:'📋',cls:'',bc:''};
   let title=r.tipo, detail='';
-  if(r.tipo==='Viaje'){title=`${r.origen} → ${r.destino}`;detail=[r.especie,+r.kilos?`${(+r.kilos/1000).toFixed(1)} tn`:'',r.kms_rec?`${r.kms_rec} km`:''].filter(Boolean).join(' · ');}
-  else if(r.tipo==='Combustible'){title='Carga combustible';detail=[r.litros?`${r.litros} L`:'',r.proveedor].filter(Boolean).join(' · ');}
+  if(r.tipo==='Viaje'){
+    title=`${r.origen} → ${r.destino}`;
+    detail=[r.especie,+r.kilos?`${(+r.kilos/1000).toFixed(1)} tn`:'',r.kms_rec?`${r.kms_rec} km`:''].filter(Boolean).join(' · ');
+  } else if(r.tipo==='Combustible'){title='Carga combustible';detail=[r.litros?`${r.litros} L`:'',r.proveedor].filter(Boolean).join(' · ');}
   else if(r.tipo==='Reparacion'){title=r.actividad||'Reparación';detail=r.proveedor||'';}
   else if(r.tipo==='Mantenimiento'){title=r.actividad||'Mantenimiento';}
 
-  let costoHtml = '';
+  const cartaHtml = r.carta_porte ? `<div class="rec-carta">CP: ${r.carta_porte}</div>` : '';
+  const obsHtml = r.observaciones ? `<div class="rec-obs">${r.observaciones}</div>` : '';
+
+  let adicionalHtml = '';
   if (r.tipo === 'Viaje') {
-    const c = calcCosto(r);
-    costoHtml = c != null
-      ? `<div class="rec-cost">$${c.toLocaleString('es-AR',{minimumFractionDigits:0,maximumFractionDigits:0})}</div>`
+    const a = calcAdicional(r);
+    adicionalHtml = a != null
+      ? `<div class="rec-cost">$${a.toLocaleString('es-AR',{minimumFractionDigits:0,maximumFractionDigits:0})}</div>`
       : `<div class="rec-cost-none">sin tarifa</div>`;
   }
 
@@ -289,16 +294,21 @@ function renderCard(r) {
     <div class="rec-info">
       <div class="rec-title">${title}</div>
       ${detail?`<div class="rec-detail">${detail}</div>`:''}
+      ${cartaHtml}${obsHtml}
       <span class="badge ${td.bc}">${r.tipo}</span>
     </div>
     <div class="rec-meta">
       ${r.km_camion?`<div class="rec-km">${(+r.km_camion).toLocaleString('es-AR')} km</div>`:''}
-      ${costoHtml}
+      ${adicionalHtml}
     </div>
   </div>`;
 }
 
-function changeMonth(d){currentMonth+=d;if(currentMonth>11){currentMonth=0;currentYear++;}if(currentMonth<0){currentMonth=11;currentYear--;}updateMonthLabel();renderRecords();}
+function changeMonth(d){
+  currentMonth+=d;if(currentMonth>11){currentMonth=0;currentYear++;}if(currentMonth<0){currentMonth=11;currentYear--;}
+  updateMonthLabel(); buildTarifasList(); renderRecords();
+}
 </script>
 </body>
 </html>
+
