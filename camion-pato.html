@@ -500,7 +500,7 @@ async function submitForm(){
       ? { action:'update', rowIndex:editingRowIndex, row }
       : { action:'append', row };
 
-    await fetch(APPS_SCRIPT_URL,{method:'POST',mode:'no-cors',body:JSON.stringify(payload)});
+    await fetch(APPS_SCRIPT_URL + '?data=' + encodeURIComponent(JSON.stringify(payload)),{method:'GET',mode:'no-cors'});
     showToast(editingRowIndex?'✓ Editado correctamente':'✓ Guardado correctamente','success');
     closeDrawer();
     await loadData();
@@ -519,7 +519,7 @@ function closeConfirm(){ document.getElementById('confirmOverlay').classList.rem
 async function doDelete(rowIndex){
   closeConfirm();
   try{
-    await fetch(APPS_SCRIPT_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({action:'delete',rowIndex})});
+   await fetch(APPS_SCRIPT_URL + '?data=' + encodeURIComponent(JSON.stringify({action:'delete',rowIndex})),{method:'GET',mode:'no-cors'});
     showToast('✓ Borrado','success');
     await loadData();
   }catch(e){showToast('Error de conexión','error');}
