@@ -250,11 +250,12 @@ textarea{resize:vertical;min-height:70px}
 <script>
 const SHEET_ID = '1wkAAUVgFGOH8q0xni1nfyuFB_fXN5kfV6XkbORZ1YUQ';
 const SHEET_NAME = 'Novedades';
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzXSmuUWPnzedCGhAPr6vJfXFP80q5obQ7nsHsreg4eGze5T9Qiv-vJWGK47ayZ2Ag/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyyf9Nyvo2WbQgnXbgTeB_TVuYPxQG5Z-RJJPiVMK-S1IBPLxEg6LaZ4QaBflborVU/exec';
 const MONTHS = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 let currentMonth = new Date().getMonth(), currentYear = new Date().getFullYear();
 let allRecords = [], selectedType = 'Viaje', lastKm = null;
-let editingRowIndex = null; // 1-based row index in sheet (row 1 = header)
+let editingId = null; // ID of the record being edited
+let editingRecord = null; // Reference to record being edited (to preserve fields)
 
 document.addEventListener('DOMContentLoaded', () => { setDefaults(); updateMonthLabel(); loadData(); });
 
@@ -297,7 +298,8 @@ function parseCSV(csv) {
       proveedor:c[10]?.replace(/"/g,'').trim()||'',
       adicional:c[11]?.replace(/"/g,'').trim()||'',
       observaciones:c[12]?.replace(/"/g,'').trim()||'',
-      carta_porte:c[13]?.replace(/"/g,'').trim()||''
+      carta_porte:c[13]?.replace(/"/g,'').trim()||'',
+      id:c[14]?.replace(/"/g,'').trim()||''
     };
   }).filter(Boolean);
 }
@@ -376,8 +378,8 @@ function renderCard(r) {
       ${cartaHtml}${obsHtml}
       <span class="badge ${td.bc}">${r.tipo}</span>
       <div class="card-actions">
-        <button class="btn-edit" onclick="openEdit(${r.rowIndex})">✏ Editar</button>
-        <button class="btn-del" onclick="confirmDelete(${r.rowIndex})">✕ Borrar</button>
+        <button class="btn-edit" onclick="openEdit('${r.id}')">✏ Editar</button>
+        <button class="btn-del" onclick="confirmDelete('${r.id}')">✕ Borrar</button>
       </div>
     </div>
     <div class="rec-meta">
@@ -389,7 +391,7 @@ function renderCard(r) {
 function changeMonth(d){currentMonth+=d;if(currentMonth>11){currentMonth=0;currentYear++;}if(currentMonth<0){currentMonth=11;currentYear--;}updateMonthLabel();renderRecords();}
 
 function openDrawer(editing=false){
-  editingRowIndex = null;
+  editingId = null;
   document.getElementById('editBadge').style.display='none';
   document.getElementById('submitBtn').textContent='Guardar novedad';
   document.getElementById('overlay').classList.add('open');
@@ -409,10 +411,11 @@ function clearForm(){
   selectType('Viaje', document.querySelector('.type-btn'));
 }
 
-function openEdit(rowIndex) {
-  const r = allRecords.find(x => x.rowIndex === rowIndex);
+function openEdit(id) {
+  const r = allRecords.find(x => String(x.id) === String(id));
   if(!r) return;
-  editingRowIndex = rowIndex;
+  editingId = id;
+  editingRecord = r; // keep reference to preserve fields like adicional
   document.getElementById('editBadge').style.display='inline-block';
   document.getElementById('submitBtn').textContent='Guardar cambios';
   document.getElementById('overlay').classList.add('open');
@@ -468,16 +471,17 @@ async function submitForm(){
   const btn=document.getElementById('submitBtn');btn.disabled=true;btn.textContent='Guardando...';
   try{
     const fecha=document.getElementById('fFecha').value, km=document.getElementById('fKm').value;
-    if(!fecha||!km){showToast('Completá fecha y KM','error');btn.disabled=false;btn.textContent=editingRowIndex?'Guardar cambios':'Guardar novedad';return;}
+    if(!fecha||!km){showToast('Completá fecha y KM','error');btn.disabled=false;btn.textContent=editingId?'Guardar cambios':'Guardar novedad';return;}
     const [y,m,d]=fecha.split('-');
-    let obs='', carta='';
+    // Preserve adicional from existing record when editing
+    const preservedAdicional = editingRecord ? editingRecord.adicional : '';
     const row={Fecha:`${d}/${m}/${y}`,KM_Camion:km,Tipo:selectedType,
       Origen:'',Destino:'',KMs_Recorridos:'',Especie:'',Kilos:'',
-      Litros:'',Actividad:'',Proveedor:'',Adicional:'',Observaciones:'',Carta_de_porte:''};
+      Litros:'',Actividad:'',Proveedor:'',Adicional:preservedAdicional,Observaciones:'',Carta_de_porte:''};
     if(selectedType==='Viaje'){
       row.Origen=document.getElementById('fOrigen').value;
       row.Destino=document.getElementById('fDestino').value;
-      if(!row.Origen||!row.Destino){showToast('Completá origen y destino','error');btn.disabled=false;btn.textContent=editingRowIndex?'Guardar cambios':'Guardar novedad';return;}
+      if(!row.Origen||!row.Destino){showToast('Completá origen y destino','error');btn.disabled=false;btn.textContent=editingId?'Guardar cambios':'Guardar novedad';return;}
       row.KMs_Recorridos=document.getElementById('fKmsRec').value;
       row.Especie=document.getElementById('fEspecie').value;
       row.Kilos=document.getElementById('fKilos').value;
@@ -496,32 +500,34 @@ async function submitForm(){
       row.Observaciones=document.getElementById('fObsMant').value;
     }
 
-    const payload = editingRowIndex
-      ? { action:'update', rowIndex:editingRowIndex, row }
+    const payload = editingId
+      ? { action:'update', id:editingId, row }
       : { action:'append', row };
 
     await fetch(APPS_SCRIPT_URL+'?data='+encodeURIComponent(JSON.stringify(payload)),{mode:'no-cors'});
-    showToast(editingRowIndex?'✓ Editado correctamente':'✓ Guardado correctamente','success');
+    showToast(editingId?'✓ Editado correctamente':'✓ Guardado correctamente','success');
     closeDrawer();
-    await loadData();
+    editingRecord = null;
+    // Wait a bit for the sheet to update before reloading
+    setTimeout(()=>loadData(), 800);
   }catch(e){showToast('Error de conexión','error');}
-  btn.disabled=false; btn.textContent=editingRowIndex?'Guardar cambios':'Guardar novedad';
+  btn.disabled=false; btn.textContent=editingId?'Guardar cambios':'Guardar novedad';
 }
 
-let pendingDeleteRow = null;
-function confirmDelete(rowIndex){
-  pendingDeleteRow=rowIndex;
+let pendingDeleteId = null;
+function confirmDelete(id){
+  pendingDeleteId=id;
   document.getElementById('confirmOverlay').classList.add('open');
-  document.getElementById('confirmOkBtn').onclick=()=>doDelete(rowIndex);
+  document.getElementById('confirmOkBtn').onclick=()=>doDelete(id);
 }
-function closeConfirm(){ document.getElementById('confirmOverlay').classList.remove('open'); pendingDeleteRow=null; }
+function closeConfirm(){ document.getElementById('confirmOverlay').classList.remove('open'); pendingDeleteId=null; }
 
-async function doDelete(rowIndex){
+async function doDelete(id){
   closeConfirm();
   try{
-    await fetch(APPS_SCRIPT_URL+'?data='+encodeURIComponent(JSON.stringify({action:'delete',rowIndex})),{mode:'no-cors'});
+    await fetch(APPS_SCRIPT_URL+'?data='+encodeURIComponent(JSON.stringify({action:'delete',id})),{mode:'no-cors'});
     showToast('✓ Borrado','success');
-    await loadData();
+    setTimeout(()=>loadData(), 800);
   }catch(e){showToast('Error de conexión','error');}
 }
 
